@@ -8,8 +8,12 @@ import {
     Server,
     Socket
 } from "socket.io";
+import expressHandlebars from "express-handlebars";
+
 import mongoose from "mongoose";
 import ChatManager from "./dao/managers/ChatManager.js";
+import { allowInsecurePrototypeAccess } from "@handlebars/allow-prototype-access";
+
 
 const app = express();
 const puerto = 8080;
@@ -22,8 +26,9 @@ app.use(express.urlencoded({
 }));
 app.use(express.static(__dirname + "/public"))
 
-app.engine("handlebars", handlebars.engine());
-app.set("view engine", "handlebars");
+app.engine('handlebars', expressHandlebars.engine({
+    handlebars: allowInsecurePrototypeAccess(handlebars)
+}));app.set("view engine", "handlebars");
 app.set("views", __dirname + "/views")
 
 app.use("/api", cartsRouter);
